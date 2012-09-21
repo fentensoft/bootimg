@@ -1,0 +1,9 @@
+#!/bin/bash
+
+kernel="kernel"
+
+cp $(pwd)/../$kernel/arch/arm/boot/zImage ./
+cp $(pwd)/../$kernel/drivers/staging/custom/usb/mot_usb.ko ./CyanogenMod7/lib/modules/
+cp $(pwd)/../$kernel/drivers/staging/custom/symsearch/symsearch.ko ./CyanogenMod7/lib/modules/
+rm ./*.img
+./repack-bootimg.pl lzma ../$kernel/arch/arm/boot/zImage CyanogenMod7 boot.img
