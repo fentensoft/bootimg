@@ -34,7 +34,11 @@ on init
     mkdir /data/download 0775 system system
     mkdir /data/download/mystuff 0775 system system
 
-    # write /dev/usb_device_mode msc_adb
+    write /sys/kernel/mm/ksm/sleep_millisecs 15000
+    write /sys/kernel/mm/ksm/pages_to_scan 256
+    write /sys/kernel/mm/ksm/run 1
+
+    write /dev/usb_device_mode msc_adb
 
     chmod 0660 /dev/mtp
     chmod 0660 /dev/ttyGS0
@@ -46,6 +50,12 @@ on init
     chown mot_usb mot_usb /proc/mtpctl
     
     insmod /lib/modules/symsearch.ko
+    
+    insmod /lib/modules/pvr-off.ko
+
+    insmod /lib/modules/pvrsrvkm.ko
+    insmod /lib/modules/omaplfb.ko
+    
     insmod /lib/modules/mot_usb.ko
 
 on early-boot
@@ -181,6 +191,8 @@ on boot
 
     chmod 0666 /dev/pvrsrvkm
     chown system graphics /dev/pvrsrvkm
+    
+    write /sys/devices/omapdss/display0/tear_elim 0
 
     write /sys/devices/platform/ohci.0/usb2/2-3/power/level auto
     write /sys/module/wakelock/parameters/debug_mask 7
@@ -333,12 +345,12 @@ service wlan_loader /system/bin/wlan_loader \
     oneshot
 
 service wlan_ap_loader /system/bin/logwrapper /system/bin/tiap_loader -f /system/etc/wifi/fw_tiwlan_ap.bin -i /system/etc/wifi/tiwlan_ap.ini -e /pds/wifi/nvs_map.bin
-    post-zygote_services
+    class post-zygote_services
     disabled
     oneshot
 
 service hostapd /system/bin/logwrapper /system/bin/hostap -d /data/misc/wifi/hostapd.conf
-    post-zygote_services
+    class post-zygote_services
     disabled
     oneshot
 
@@ -394,5 +406,11 @@ service secclkd /system/bin/secclkd
     class post-zygote_services
     user system
     group system radio
-    oneshot 
+    oneshot
+
+service compcache /system/bin/handle_compcache
+    class post-zygote_services
+    user root
+    group root
+    oneshot
 
