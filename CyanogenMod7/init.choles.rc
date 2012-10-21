@@ -38,7 +38,7 @@ on init
     write /sys/kernel/mm/ksm/pages_to_scan 256
     write /sys/kernel/mm/ksm/run 1
 
-    write /dev/usb_device_mode msc_adb
+    # write /dev/usb_device_mode msc_adb
 
     chmod 0660 /dev/mtp
     chmod 0660 /dev/ttyGS0
@@ -50,12 +50,6 @@ on init
     chown mot_usb mot_usb /proc/mtpctl
     
     insmod /lib/modules/symsearch.ko
-    
-    insmod /lib/modules/pvr-off.ko
-
-    insmod /lib/modules/pvrsrvkm.ko
-    insmod /lib/modules/omaplfb.ko
-    
     insmod /lib/modules/mot_usb.ko
 
 on early-boot
