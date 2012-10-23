@@ -34,7 +34,7 @@ on init
     mkdir /data/download 0775 system system
     mkdir /data/download/mystuff 0775 system system
 
-    write /sys/kernel/mm/ksm/sleep_millisecs 15000
+    write /sys/kernel/mm/ksm/sleep_millisecs 120000
     write /sys/kernel/mm/ksm/pages_to_scan 256
     write /sys/kernel/mm/ksm/run 1
 
