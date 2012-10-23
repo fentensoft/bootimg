@@ -7,6 +7,3 @@ cp $(pwd)/../$kernel/drivers/staging/custom/usb/mot_usb.ko ./CyanogenMod7/lib/mo
 cp $(pwd)/../$kernel/drivers/staging/custom/symsearch/symsearch.ko ./CyanogenMod7/lib/modules/
 rm ./*.img
 ./repack-bootimg.pl gzip ../$kernel/arch/arm/boot/zImage CyanogenMod7 boot.img
-
-adb wait-for-device
-adb shell reboot bootloader
