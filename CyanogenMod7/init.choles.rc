@@ -225,7 +225,22 @@ on property:persist.sys.qtouch_num=4
 
 on property:persist.sys.qtouch_num=5
     write /proc/qtouch/num_touch 5
+    
+on property:persist.sys.ledthreshold=100
+    write /proc/low_batt/threshold 100
 
+on property:persist.sys.ledthreshold=0
+    write /proc/low_batt/threshold 0
+
+on property:persist.sys.ledthreshold=5
+    write /proc/low_batt/threshold 5
+
+on property:persist.sys.ledthreshold=15
+    write /proc/low_batt/threshold 15
+
+on property:persist.sys.ledthreshold=10
+    write /proc/low_batt/threshold 10
+   
 # Power up to normal
 on property:tcmd.suspend=0
     class_start pre-zygote_services
