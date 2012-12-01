@@ -1,7 +1,7 @@
 ##摩托罗拉XT701内核
 
 ###作者:fentensoft
-###Email:[fentensoft@163.com](emailto:fentensoft@163.com)
+###Email:[fentensoft@163.com](mailto:fentensoft@163.com)
 
 更新预告:
    
