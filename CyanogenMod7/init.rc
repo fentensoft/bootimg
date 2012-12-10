@@ -32,7 +32,6 @@ loglevel 3
     mkdir /system
     mkdir /data 0771 system system
     mkdir /cache 0771 system cache
-#    mkdir /config 0500 root root
     mkdir /mnt/secure 0700 root root
     mkdir /mnt/secure/staging 0700 root root
     mkdir /mnt/secure/asec  0700 root root
@@ -178,7 +177,6 @@ on boot
     write /sys/module/lowmemorykiller/parameters/adj 0,1,2,4,7,15
 
     write /proc/sys/vm/overcommit_memory 1
-#    write /proc/sys/vm/min_free_kbytes 6144
     write /proc/sys/vm/min_free_order_shift 4
     write /sys/module/lowmemorykiller/parameters/minfree 1536,3072,4096,6144,6656,8192
     write /proc/1/oom_adj -16
@@ -231,7 +229,6 @@ on boot
     setprop net.tcp.buffersize.edge    4093,26280,35040,4096,16384,35040
     setprop net.tcp.buffersize.gprs    4092,8760,11680,4096,8760,11680
 
-    # import /system/etc/init.local.rc
     exec /system/bin/sysinit
 
 #

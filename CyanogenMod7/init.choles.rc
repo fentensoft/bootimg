@@ -41,10 +41,6 @@ on init
     chown root system /sys/kernel/mm/ksm/run
     chmod 0664 /sys/kernel/mm/ksm/run
 
-    write /sys/kernel/mm/ksm/sleep_millisecs 120000
-    write /sys/kernel/mm/ksm/pages_to_scan 256
-    write /sys/kernel/mm/ksm/run 1
-
     # write /dev/usb_device_mode msc_adb
 
     chmod 0660 /dev/mtp
@@ -203,7 +199,7 @@ on boot
     write /sys/power/enable_abb_mode 1
 
     write /proc/sys/kernel/softlockup_panic 1
-    write /sys/block/mmcblk0/bdi/read_ahead_kb 3072
+    write /sys/block/mmcblk0/bdi/read_ahead_kb 4096
 
 # Start services
 class_start pre-zygote_services
