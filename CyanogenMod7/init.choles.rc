@@ -196,7 +196,7 @@ on boot
     write /sys/power/enable_abb_mode 1
 
     write /proc/sys/kernel/softlockup_panic 1
-    write /sys/block/mmcblk0/bdi/read_ahead_kb 4096
+    write /sys/block/mmcblk0/bdi/read_ahead_kb 3072
 
 # Start services
 class_start pre-zygote_services
