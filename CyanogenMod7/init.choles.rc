@@ -402,9 +402,3 @@ service secclkd /system/bin/secclkd
     group system radio
     oneshot
 
-service compcache /system/bin/handle_compcache
-    class post-zygote_services
-    user root
-    group root
-    oneshot
-
