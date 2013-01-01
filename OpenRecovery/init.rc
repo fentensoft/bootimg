@@ -1,0 +1,58 @@
+
+on init
+
+    export PATH /sbin:/bin:/cache/OpenRecovery/bin/:/cache/OpenRecovery/sbin
+    export ANDROID_ROOT /system
+    export ANDROID_ASSETS /system/app
+    export ANDROID_DATA /data
+    export LD_LIBRARY_PATH /lib
+    export EXTERNAL_STORAGE /sdcard
+    export INIT_DIR /sdcard/OpenRecovery/init
+    export APP_DIR /app
+    export TAGPREFIX /tags/.
+    export DEVICE_MEM_TYPE mtd
+
+    mkdir /sdcard
+    mkdir /system
+    mkdir /data
+    mkdir /cache
+    mkdir /etc
+    mkdir /tmp
+    mount /tmp /tmp tmpfs
+    mount yaffs2 mtd@cache /cache
+    
+    write /etc/reinit 1
+    write /sys/class/leds/lcd-backlight/als  0
+    write /sys/class/leds/lcd-backlight/brightness  255
+    write /sys/power/cpuidle_deepest_state   0
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor performance
+    write /dev/usb_device_mode msc_adb
+    chmod 0666 /dev/cpcap
+    chmod 0666 /dev/cpcap_batt
+    chmod 0666 /dev/cpcap_uc
+
+    exec /cache/OpenRecovery/bin/post_switch.sh
+
+on boot
+
+    ifup lo
+    hostname localhost
+    domainname localdomain
+
+    class_start default
+
+
+service recovery /sbin/recovery
+
+service adbd /sbin/adbd recovery
+
+service usbd /sbin/usbd
+    user root
+    group root
+    socket usbd stream 0666 root root
+
+service battd /sbin/battd
+    user root
+    group root
+    socket battdsock stream 0666 root root
+
