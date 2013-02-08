@@ -1,0 +1,7 @@
+#!/bin/bash
+
+kernel="../Source/jordan-kernel"
+
+cp $(pwd)/../$kernel/arch/arm/boot/zImage ./
+rm ./*.img
+./repack-bootimg.pl gzip ../$kernel/arch/arm/boot/zImage 3 boot.img
