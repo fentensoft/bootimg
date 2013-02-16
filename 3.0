@@ -3,5 +3,6 @@
 kernel="../Source/jordan-kernel"
 
 cp $(pwd)/../$kernel/arch/arm/boot/zImage ./
+cat zImage dtb > zImage_dtb
 rm ./*.img
-./repack-bootimg.pl gzip ../$kernel/arch/arm/boot/zImage 3 boot.img
+./repack-bootimg.pl gzip ./zImage_dtb 3 boot.img
