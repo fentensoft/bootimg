@@ -37,6 +37,9 @@ on init
     write /sys/kernel/mm/ksm/sleep_millisecs 120000
     write /sys/kernel/mm/ksm/pages_to_scan 256
     write /sys/kernel/mm/ksm/run 1
+    
+    chown root system /sys/block/mmcblk0/queue/scheduler
+    chmod 0664 /sys/block/mmcblk0/queue/scheduler
 
     # write /dev/usb_device_mode msc_adb
 
