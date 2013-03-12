@@ -76,20 +76,6 @@ loglevel 3
     chown system system /data
     chmod 0771 /data
 
-    mkdir /data/dontpanic
-    chown root log /data/dontpanic
-    chmod 0777 /data/dontpanic
-
-    copy /proc/apanic_console /data/dontpanic/apanic_console
-    chown root log /data/dontpanic/apanic_console
-    chmod 0777 /data/dontpanic/apanic_console
-
-    copy /proc/apanic_threads /data/dontpanic/apanic_threads
-    chown root log /data/dontpanic/apanic_threads
-    chmod 0777 /data/dontpanic/apanic_threads
-
-    write /proc/apanic_console 0
-
     mount yaffs2 mtd@cache /cache nosuid nodev
     chown system cache /cache
     chmod 0771 /cache
