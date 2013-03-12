@@ -1,3 +1,6 @@
+on early-init
+
+    start ueventd
 on init
 
 sysclktz 0
@@ -213,6 +216,9 @@ on boot
     setprop net.tcp.buffersize.gprs    4092,8760,11680,4096,8760,11680
 
     exec /system/bin/sysinit
+
+service ueventd /sbin/ueventd
+    critical
 
 service console /system/bin/sh
     class pre-zygote_services
