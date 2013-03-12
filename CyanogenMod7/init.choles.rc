@@ -5,6 +5,7 @@ on init
 
     mkdir /cdrom 0755 system system
     mount yaffs2 mtd@cdrom /cdrom
+    mount yaffs2 mtd@cdrom /cdrom ro remount
 	
     symlink /dev/ttyGS0 /dev/acm0
     mkdir /pds 0775 system system
@@ -20,6 +21,19 @@ on init
     write /sys/power/sleep_while_idle 1
     write /sys/power/enable_off_mode 1
 
+    write /sys/devices/system/cpu/cpu0/cpufreq/ondemand/up_threshold 86
+    write /sys/devices/system/cpu/cpu0/cpufreq/ondemand/sampling_rate 46875
+    write /sys/power/sr_vdd1_autocomp 1
+    write /sys/power/sr_vdd2_autocomp 1
+    write /sys/power/enable_abb_mode 1
+
+    chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+    chmod 0666 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+    chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    chmod 0666 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+    chmod 0666 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+
     symlink /pds /config
     mount yaffs2 mtd@pds /pds nosuid nodev
     chown system system /pds
@@ -34,7 +48,7 @@ on init
     mkdir /data/download 0775 system system
     mkdir /data/download/mystuff 0775 system system
     
-    write /sys/kernel/mm/ksm/sleep_millisecs 120000
+    write /sys/kernel/mm/ksm/sleep_millisecs 60000
     write /sys/kernel/mm/ksm/pages_to_scan 256
     write /sys/kernel/mm/ksm/run 1
     
@@ -127,8 +141,6 @@ on boot
     mkdir /cache/logger 0770 radio log
     chown radio log /cache/logger
     chmod 0770 /cache/logger
-    exec /system/bin/sh /system/bin/init_early_bind_mounts.sh
-    exec /system/bin/sh /system/bin/init_bp_nvm.sh
 
     mkdir /pds/lost+found 0770
     chown root root /pds/lost+found
@@ -181,8 +193,6 @@ on boot
     chmod 0660 /sys/class/leds/blue/brightness
     chown system system /sys/class/leds/af-led/brightness
     chmod 0666 /sys/class/leds/af-led/brightness
-    chown system system /sys/class/leds/button-backlight/brightness
-    chmod 0660 /sys/class/leds/button-backlight/brightness
 
     chmod 0660 /sys/class/timed_output/vibrator/enable
 
@@ -199,11 +209,9 @@ on boot
     write /sys/power/enable_abb_mode 1
 
     write /proc/sys/kernel/softlockup_panic 1
-    write /sys/block/mmcblk0/bdi/read_ahead_kb 3072
+    write /sys/block/mmcblk0/bdi/read_ahead_kb 4096
 
-# Start services
 class_start pre-zygote_services
-
     exec /system/bin/mot_boot_mode
     setrlimit 4 2147483648 2147483648
 
@@ -229,18 +237,15 @@ on property:persist.sys.qtouch_num=4
 on property:persist.sys.qtouch_num=5
     write /proc/qtouch/num_touch 5
 
-# Power up to normal
 on property:tcmd.suspend=0
     class_start pre-zygote_services
     class_start zygote_services
     class_start post-zygote_services
 
-# Power up to suspend 
 on property:tcmd.suspend=1
     class_start pre-zygote_services
     class_start post-zygote_services
 
-# Normal to suspend 
 on property:tcmd.suspend=2
     class_stop zygote_services
 
@@ -258,16 +263,10 @@ on property:sys.shutdown=1
 on property:init.svc.wpa_supplicant=stopped
     stop dhcpcd
 
-
 service atvc /system/bin/dbvc_atvc_property_set
     class pre-zygote_services
     user system
     group system
-    oneshot
-
-service keypadinit /system/bin/sh /system/bin/init_prep_keypad.sh
-    class pre-zygote_services
-    user root
     oneshot
 
 service usbd /system/bin/usbd
@@ -281,12 +280,10 @@ service nvm-daemon /system/bin/nvm_daemon
     user radio
     group radio
 
-# start start_modem.sh to for development purpose 
 service start_modem /system/bin/sh /system/bin/start_modem.sh
     class pre-zygote_services
     oneshot
 
-# start commdrv pds script
 service start_commdrv /system/bin/sh /system/etc/motorola/comm_drv/commdrv_fs.sh
     class pre-zygote_services
     oneshot
@@ -301,9 +298,6 @@ service gkisystem /system/bin/gkisystem
     group radio system mot_accy
     onrestart exec /system/bin/gki_pd_notifier
 
-service fmradio /system/bin/fmradioserver
-    class post-zygote_services
-    group bluetooth net_raw net_bt net_bt_admin
 
 service battd /system/bin/battd
     socket battdsock stream 0660 mot_accy mot_accy

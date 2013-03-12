@@ -180,7 +180,6 @@ on boot
     write /proc/sys/vm/min_free_order_shift 4
     write /sys/module/lowmemorykiller/parameters/minfree 1536,3072,4096,6144,6656,8192
     write /proc/1/oom_adj -16
-    # Tweak background writeout
     write /proc/sys/vm/dirty_expire_centisecs 200
     write /proc/sys/vm/dirty_background_ratio  5
 
@@ -196,22 +195,6 @@ on boot
     chmod 0660 /sys/power/wake_lock
     chmod 0660 /sys/power/wake_unlock
     chown system system /sys/class/timed_output/vibrator/enable
-    chown system system /sys/class/leds/keyboard-backlight/brightness
-    chown system system /sys/class/leds/lcd-backlight/brightness
-    chown system system /sys/class/leds/button-backlight/brightness
-    chown system system /sys/class/leds/jogball-backlight/brightness
-    chown system system /sys/class/leds/red/brightness
-    chown system system /sys/class/leds/green/brightness
-    chown system system /sys/class/leds/blue/brightness
-    chown system system /sys/class/leds/red/device/grpfreq
-    chown system system /sys/class/leds/red/device/grppwm
-    chown system system /sys/class/leds/red/device/blink
-    chown system system /sys/class/leds/red/brightness
-    chown system system /sys/class/leds/green/brightness
-    chown system system /sys/class/leds/blue/brightness
-    chown system system /sys/class/leds/red/device/grpfreq
-    chown system system /sys/class/leds/red/device/grppwm
-    chown system system /sys/class/leds/red/device/blink
     chown system system /sys/class/timed_output/vibrator/enable
     chown system system /sys/module/sco/parameters/disable_esco
     chown system system /sys/kernel/ipv4/tcp_wmem_min
@@ -231,10 +214,6 @@ on boot
 
     exec /system/bin/sysinit
 
-#
-## Daemon processes to be run by init.
-#
-
 service console /system/bin/sh
     class pre-zygote_services
     console
@@ -245,12 +224,10 @@ service console /system/bin/sh
 on property:ro.secure=0
     start console
 
-# adbd is controlled by the persist.service.adb.enable system property
 service adbd /sbin/adbd
     class pre-zygote_services
     disabled
 
-# adbd on at boot in emulator
 on property:ro.kernel.qemu=1
     start adbd
 
